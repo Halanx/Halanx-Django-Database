@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from .models import Batch
 from OrderBase.models import Order
 from ShopperBase.models import Shopper
-from OrderBase .serializers import OrderSerializer
+from OrderBase.serializers import OrderSerializer
 
 
 @api_view(['GET', 'POST'])
