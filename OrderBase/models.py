@@ -1,6 +1,6 @@
 from django.db import models
 from ShopperBase.models import Shopper
-from BatchBase.models import Batches
+# from BatchBase.models import Batch
 from Halanx import settings
 from UserBase.models import User
 

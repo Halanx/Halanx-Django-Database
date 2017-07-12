@@ -1,6 +1,6 @@
 from django.db import models
 from StoreBase.models import Store
-
+from django.shortcuts import get_object_or_404
 
 SHOE = 'Footwear'
 DRY = 'Dairy Products'
@@ -22,7 +22,10 @@ class Product(models.Model):
 
     ProductName = models.CharField(blank=True, max_length=250)
     Price = models.FloatField(blank=True, default=9.99)
-    StoreId = models.ForeignKey(Store, blank=True, null=True)
+
+    # since frontend can't send Store Object
+    StoreId = models.IntegerField(blank=True, null=True)
+    RelatedStore = models.ForeignKey(Store, blank=True, null=True)
 
     # choices = ProductCategories
     Category = models.CharField(max_length=200,
@@ -38,12 +41,12 @@ class Product(models.Model):
     def __str__(self):
         return self.ProductName
 
+    def save(self, *args, **kwargs):
 
-    #No need of this
-    #def save(self, *args, **kwargs):
+        temp = get_object_or_404(Store, id=self.StoreId)
+        self.RelatedStore = temp
 
-        #attach algo for delivery charges
-     #   super(CartItem, self).save(*args, **kwargs)
+        super(Product, self).save(*args, **kwargs)
 
 
 class ProductPhoto(models.Model):

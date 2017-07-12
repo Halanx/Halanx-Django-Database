@@ -1,60 +1,98 @@
-// Products
 
+Advisory Note: Replace ids/PhoneNos according to your needs.
+ 
+PRODUCTS
 1. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/products/
-All products
+All products --> Post new products here
 
 2. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/products/3
-Product with specific id
+Product with specific id --> Patch/get 
 
 3. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/products/3/upload-image
-Upload image of of specific product 
+Upload image of of specific product  
 
 
-// Users
+STORES
+6. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/stores/
+All Stores --> Post new Stores here 
 
-4. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/users/
-All Users registered
+7. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/stores/1
+Specific Store acc. to its id --> Patch/get on static store info
 
-5. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/users/9899570878
-User with specific Phone no.
+8. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/stores/2/upload-logo
+upload logo of a specific store 
+
+9. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/stores/2/products
+Get All Products of a particular store --> Get only 
 
 
-// Carts
+USERS
+10. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/users/
+All Users registered --> Add New Users
 
-6. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/
+11. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/users/9899570878
+User with specific Phone no. --> Patch/get 
+
+
+CARTS
+12. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/
 All carts of all Users --> post cart here as soon as new user registers 
 
-7. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/9899570838/
+13. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/9899570838/
 Cart of a specific User --> get total, delivery charges of a cart
 
-8. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/9899570838/active
+14. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/9899570838/active
 Active items in cart of a specific user --> Only get allowed
 
-9. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/items/
+15. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/items/
 All items in all carts, active or inactive --> post items here 
 
-10. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/items/44
+16. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/items/44
 Specific Cart Item --> Send patch requests here
 
-11. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/itemlist/9899570838
+17. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/carts/itemlist/9899570838
 ALl items posted till now in a specific cart --> Not much useful at present
 
 
-// Orders
-
-12. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/
+ORDERS
+18. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/
 All Orders --> post order here 
 
-13. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/8
+19. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/8
 Particular Order --> Send Get/Patch requests here
 
-14. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/user/9899570838
+20. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/user/9899570838
 All Orders of a particular User --> Get Only
 
-15. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/6/items
+21. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/orders/6/items
 Get Items of Particular Order --> redundant, get only 
 
-// shoppers
+
+SHOPPERS
+22. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/shoppers/
+All Shoppers
+
+23. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/shoppers/9582164402/
+Specific Shopper Acc. to Phone No 
+
+24. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/shoppers/1234567890/upload-image
+Upload image of a specific shopper
+
+25. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/shoppers/documents/
+All Shooper Documents --> Post Documents of shopper here
+
+26. http://ec2-34-208-181-152.us-west-2.compute.amazonaws.com/shoppers/documents/1234567890/
+Get Documents of a shopper acc. to phone no
+
+
+BATCHES
+
+Coming Soon...
+
+
+
+
+
 
 
 
