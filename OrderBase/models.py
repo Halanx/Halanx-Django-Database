@@ -33,7 +33,6 @@ class Order (models.Model):
 
     # SPECIFICS
     CustomerPhoneNo = models.BigIntegerField(null=True)
-    ShopperPhoneNo = models.BigIntegerField(null=True, blank=True)
     PlacingTime = models.DateTimeField(auto_now_add=True)
 
     # MONEY INVOLVED
@@ -85,6 +84,19 @@ class Order (models.Model):
         super(Order, self).save(*args, **kwargs)
 
     """
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
