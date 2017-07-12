@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Batches
+from .models import Batch
 
 
-class BatchesSerializer(serializers.ModelSerializer):
+class BatchSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Batches
+        model = Batch
         fields = '__all__'
 
 

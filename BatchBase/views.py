@@ -2,25 +2,25 @@
 
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import BatchesSerializer
+from .serializers import BatchSerializer
 from rest_framework.response import Response
 
-from .models import Batches
+from .models import Batch
 from OrderBase.models import Order
 from ShopperBase.models import Shopper
-from OrderBase .serializers import OrderSerializer
+from OrderBase.serializers import OrderSerializer
 
 
 @api_view(['GET', 'POST'])
 def batch_list(request):
 
     if request.method == 'GET':
-        batches = Batches.objects.all()
-        serializer = BatchesSerializer(batches, many=True)
+        batches = Batch.objects.all()
+        serializer = BatchSerializer(batches, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = BatchesSerializer(data=request.data)
+        serializer = BatchSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -32,16 +32,16 @@ def batch_list(request):
 def batch_id(request, pk):
 
     try:
-        part = Batches.objects.get(pk=pk)
-    except Batches.DoesNotExist:
+        part = Batch.objects.get(pk=pk)
+    except Batch.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = BatchesSerializer(part)
+        serializer = BatchSerializer(part)
         return Response(serializer.data)
 
     elif request.method == 'PATCH':
-        serializer = BatchesSerializer(part, data=request.data, partial=True)
+        serializer = BatchSerializer(part, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.update(part, request.data)
             return Response(serializer.data)

@@ -1,7 +1,7 @@
 from django.contrib import admin
-from BatchBase.models import Batches
+from BatchBase.models import Batch
 
 
-admin.site.register(Batches)
+admin.site.register(Batch)
 
 

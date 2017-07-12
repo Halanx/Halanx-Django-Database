@@ -1,6 +1,6 @@
 from django.db import models
 from ShopperBase.models import Shopper
-from BatchBase.models import Batches
+# from BatchBase.models import Batch
 from Halanx import settings
 from UserBase.models import User
 
@@ -33,7 +33,6 @@ class Order (models.Model):
 
     # SPECIFICS
     CustomerPhoneNo = models.BigIntegerField(null=True)
-    ShopperPhoneNo = models.BigIntegerField(null=True, blank=True)
     PlacingTime = models.DateTimeField(auto_now_add=True)
 
     # MONEY INVOLVED
@@ -85,6 +84,19 @@ class Order (models.Model):
         super(Order, self).save(*args, **kwargs)
 
     """
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

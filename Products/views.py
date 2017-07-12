@@ -5,6 +5,7 @@ from rest_framework import status
 from .serializers import ProductSerializer, ProductPhotoSerializer
 from rest_framework.response import Response
 from .models import ProductPhoto
+from StoreBase.models import Store
 
 import json
 import base64
@@ -42,7 +43,7 @@ def product_id(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PATCH':
-        serializer = Producterializer(part, data=request.data, partial=True)
+        serializer = ProductSerializer(part, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.update(part, request.data)
             return Response(serializer.data)
