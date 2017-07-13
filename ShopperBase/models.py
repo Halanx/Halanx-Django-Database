@@ -37,7 +37,7 @@ class Shopper(models.Model):
     VehicleSpaceAvailable = models.IntegerField(default=3, blank=True, null=True)
 
     # AVAILABILITY DETAILS
-    AvailableDate = models.CharField(max_length=20, blank=True, null=True)
+    AvailableDate = models.DateField(max_length=20, blank=True, null=True)
     AvailableFrom = models.TimeField(blank=True, null=True)
     AvailableTo = models.TimeField(blank=True, null=True)
     IsOnline = models.BooleanField(blank=True, default=False)
