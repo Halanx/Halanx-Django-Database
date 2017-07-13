@@ -42,9 +42,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'BatchBase',
+    'OrderBase',
     'Carts',
     'ItemsList',
-    'OrderBase',
     'Products',
     'ShopperBase',
     'StoreBase',
@@ -96,17 +96,18 @@ WSGI_APPLICATION = 'Halanx.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 # Mysql database in my pc
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'halan',
-        'USER': 'halan',
-        'PASSWORD': 'Pass-1234',
+        'NAME': 'halanx',
+        'USER': 'nikhil',
+        'PASSWORD': 'nikhil@123',
         'HOST': 'localhost',
         'PORT': '',
     }
 }
-
+'''
 # RDS Database - enable on AWS
 """
 DATABASES = {
@@ -123,12 +124,12 @@ DATABASES = {
 
 
 # sqlite database
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 
 
@@ -143,7 +144,9 @@ DATE_INPUT_FORMATS = ('%d-%m-%Y', '%Y-%m-%d')
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
+
+DATE_FORMAT = 'j F Y'
 
 USE_TZ = True
 
