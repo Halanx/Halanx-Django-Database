@@ -53,7 +53,7 @@ class Order (models.Model):
     IsDelivered = models.BooleanField(default=False, blank=True)
 
     # DELIVERY TIME
-    DeliveryDate = models.CharField(max_length=20, null=True, blank=True)
+    DeliveryDate = models.DateField(max_length=20, blank=True, null=True)
     StartTime = models.TimeField(null=True, blank=True)
     EndTime = models.TimeField(null=True, blank=True)
 
@@ -64,6 +64,9 @@ class Order (models.Model):
     def __str__(self):
         return str(self.id)
 
+    class Meta:
+
+        ordering = ('DeliveryDate', 'StartTime')
 
     """
     def save(self, *args, **kwargs):  # override save function of model class

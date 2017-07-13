@@ -14,10 +14,8 @@ class User(models.Model):
     Address = models.CharField(blank=True, null=True, max_length=300)
     logged_in = models.BooleanField(blank=True, default=True)
 
-
     Latitude = models.FloatField(blank=True, null=True)
     Longitude = models.FloatField(blank=True, null=True)
-
 
     AvgRating = models.FloatField(default=3.0, blank=True)
     n = models.IntegerField(default=0, blank=True)     # denotes number of times user has been rated

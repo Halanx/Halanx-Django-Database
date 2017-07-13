@@ -3,7 +3,7 @@ from .models import Shopper, Documents, ShopperImage
 
 
 class ShopperSerializer(serializers.ModelSerializer):
-	AvailableDate = serializers.DateField(format="%d-%m-%Y")
+    AvailableDate = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = Shopper

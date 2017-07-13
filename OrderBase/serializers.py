@@ -7,6 +7,7 @@ from Carts.serializers import CartItemSerializer1
 class OrderSerializer(serializers.ModelSerializer):
 
     order_items = CartItemSerializer1(many=True, read_only=True)
+    DeliveryDate = serializers.DateField(format="%d-%m-%Y")
 
     class Meta:
         model = Order
