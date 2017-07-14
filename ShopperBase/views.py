@@ -5,10 +5,22 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import ShopperSerializer, DocumentSerializer, ShopperImageSerializer
 from rest_framework.response import Response
+from BatchBase.models import Batch
+from BatchBase.serializers import BatchSerializer
 
 import boto3
 import base64
 import json
+
+
+
+@api_view(['GET'])
+def get_shopper_batches(request, no):
+    shopper = Shopper.objects.get(PhoneNo = no)
+    batches = Batch.objects.filter(ShopperId = shopper)
+    serializer = BatchSerializer(batches, many= True)
+    return Response(serializer.data)
+
 
 
 @api_view(['GET', 'POST'])
