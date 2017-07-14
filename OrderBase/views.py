@@ -7,6 +7,7 @@ from Carts.models import Cart, CartItem
 from UserBase.models import User
 from Products.models import Product
 from ShopperBase.models import Shopper
+from BatchBase.models import Batch
 from Carts.serializers import CartItemSerializer
 import requests
 
@@ -52,10 +53,11 @@ def order_list(request):
             # store total of active items in order object
             curr.Total = tot
             curr.save()
-
+            
             order_items = CartItem.objects.filter(OrderId = curr)
-            online_shoppers = Shopper.objects.filter(IsOnline=True, verified=True)
-
+            online_shoppers = Shopper.objects.filter(IsOnline=True, Verified=True)
+            print(online_shoppers)
+            
             b = Batch()
 
             b.OrderId = curr

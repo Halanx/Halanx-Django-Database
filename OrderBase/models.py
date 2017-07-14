@@ -52,7 +52,7 @@ class Order (models.Model):
     IsDelivered = models.BooleanField(default=False, blank=True)
 
     # DELIVERY TIME
-    DeliveryDate = models.DateField(max_length=20, blank=True, null=True)
+    DeliveryDate = models.DateField(blank=True, null=True)
     StartTime = models.TimeField(null=True, blank=True)
     EndTime = models.TimeField(null=True, blank=True)
 

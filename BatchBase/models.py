@@ -20,7 +20,7 @@ class Batch(models.Model):
     IsDelivered = models.BooleanField(blank=True, default=False)
 
     def __str__(self):
-        return str(self.OrderNo)
+        return str(self.OrderId)
 
     def save(self, *args, **kwargs):
 
