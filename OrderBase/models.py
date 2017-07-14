@@ -1,6 +1,5 @@
 from django.db import models
 from ShopperBase.models import Shopper
-# from BatchBase.models import Batch
 from Halanx import settings
 from UserBase.models import User
 
@@ -67,31 +66,7 @@ class Order (models.Model):
     class Meta:
 
         ordering = ('DeliveryDate', 'StartTime')
-
-    """
-    def save(self, *args, **kwargs):  # override save function of model class
-        # self.Total = self.Items.Total
-        # attach code for earnings of shopper in this order
-
-        if self.IsDelivered:
-            temp = self.ShopperId.AvgRating*self.ShopperId.n
-            # temp1 = self.Items.Customer.AvgRating*self.Items.Customer.n
-            self.ShopperId.n +=1
-            # self.Items.Customer.n +=1
-            temp += self.ShopperRating
-            temp1 += self.UserRating
-            self.ShopperId.AvgRating /= self.ShopperId.n
-            self.Items.Customer.AvgRating /=self.Items.Customer.n
-
-        self.BatchId.Earning += self.Earnings
-        super(Order, self).save(*args, **kwargs)
-
-    """
-
-
-
-
-
+        
 
 
 

@@ -1,4 +1,3 @@
-
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
@@ -54,6 +53,22 @@ def order_list(request):
             curr.Total = tot
             curr.save()
 
+            order_items = CartItem.objects.filter(OrderId = curr)
+            online_shoppers = Shopper.objects.filter(IsOnline=True, verified=True)
+
+            b = Batch()
+
+            b.OrderId = curr
+
+            if not len(online_shoppers):
+                b.TemporaryAvailable = False
+                b.save()
+                return Response({'status': "No shopper found"}, status=200)
+
+            b.ShopperId = online_shoppers[0]
+            b.TemporaryShopper = online_shoppers[0].PhoneNo
+            b.save()
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -102,7 +117,6 @@ def order_id(request, pk):
 def user_orders(request, pk):
 
     if request.method == 'GET':
-
         g = Order.objects.filter(CustomerPhoneNo=pk)
         serializer = OrderSerializer(g, many=True)
         return Response(serializer.data)
