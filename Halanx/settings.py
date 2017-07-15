@@ -131,6 +131,8 @@ DATABASES = {
     }
 }
 
+# GCM api key
+GCM_API_KEY = "AAAAGFfwGsM:APA91bHS9vvnsuwKBU6c9MP_iqRid431y0INVh2Mk0AO2BJNLoy0_6Yne6aWpO9dF-4oVvQBxZH1wdQd5cXr53C-oJ4XnbZdc5oXeedGElXT8HtxfbAlgzfmGZv1m9H2NzGFSMSG7No0"
 
 
 # Internationalization
