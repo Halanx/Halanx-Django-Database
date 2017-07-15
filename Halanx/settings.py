@@ -140,13 +140,14 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
 
-DATE_INPUT_FORMATS = ('%d-%m-%Y', '%Y-%m-%d')
+DATE_INPUT_FORMATS = ('%d-%m-%Y',)
 
 USE_I18N = True
 
 USE_L10N = False
 
-DATE_FORMAT = 'j F Y'
+DATE_FORMAT = '%d-%m-%Y'
+
 
 USE_TZ = True
 

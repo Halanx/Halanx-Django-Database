@@ -1,9 +1,7 @@
 from django.db import models
 from ShopperBase.models import Shopper
-# from BatchBase.models import Batch
 from Halanx import settings
 from UserBase.models import User
-
 
 RatingChoice = (
     (1, 1),
@@ -13,11 +11,11 @@ RatingChoice = (
     (5, 5),
 )
 
+
 # Problem : How to update shopper and user ratings after order is delivered ?   Done
 
 
-class Order (models.Model):
-
+class Order(models.Model):
     # ListId = models.OneToOneField(OrderList, unique=True, blank=True)
     #  maybe not needed cos pk of class would have the same function
 
@@ -53,7 +51,7 @@ class Order (models.Model):
     IsDelivered = models.BooleanField(default=False, blank=True)
 
     # DELIVERY TIME
-    DeliveryDate = models.DateField(max_length=20, blank=True, null=True)
+    DeliveryDate = models.DateField(blank=True, null=True)
     StartTime = models.TimeField(null=True, blank=True)
     EndTime = models.TimeField(null=True, blank=True)
 
@@ -65,32 +63,7 @@ class Order (models.Model):
         return str(self.id)
 
     class Meta:
-
         ordering = ('DeliveryDate', 'StartTime')
-
-    """
-    def save(self, *args, **kwargs):  # override save function of model class
-        # self.Total = self.Items.Total
-        # attach code for earnings of shopper in this order
-
-        if self.IsDelivered:
-            temp = self.ShopperId.AvgRating*self.ShopperId.n
-            # temp1 = self.Items.Customer.AvgRating*self.Items.Customer.n
-            self.ShopperId.n +=1
-            # self.Items.Customer.n +=1
-            temp += self.ShopperRating
-            temp1 += self.UserRating
-            self.ShopperId.AvgRating /= self.ShopperId.n
-            self.Items.Customer.AvgRating /=self.Items.Customer.n
-
-        self.BatchId.Earning += self.Earnings
-        super(Order, self).save(*args, **kwargs)
-
-    """
-
-
-
-
 
 
 

@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^$', views.shopper_list),
     url(r'^(?P<no>[0-9]+)/$', views.shopper_id),
     url(r'^(?P<pk>[0-9]+)/upload-image', views.upload_image),
+    url(r'^(?P<no>[0-9]+)/batches', views.get_shopper_batches),
     url(r'^documents/$', views.post_documents),
     url(r'^documents/(?P<who>[0-9]+)/$', views.get_documents),
 ]
