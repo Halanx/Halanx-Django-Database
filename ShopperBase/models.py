@@ -27,6 +27,7 @@ class Shopper(models.Model):
     City = models.CharField(max_length=200, null=True, blank=True, default='Delhi')
     DisplayPictureURL = models.CharField(max_length=300, blank=True, null=True)
     AccessToken = models.CharField(max_length=300, blank=True, null=True)
+    GcmId = models.CharField(max_length=500, blank=True, null=True)
 
     # ID DETAILS
     IdNumber = models.CharField(max_length=50, blank=True)                             # number of id
