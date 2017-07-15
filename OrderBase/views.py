@@ -10,7 +10,11 @@ from ShopperBase.models import Shopper
 from BatchBase.models import Batch
 from Carts.serializers import CartItemSerializer
 import requests
+from Halanx import settings
 
+
+from pyfcm import FCMNotification
+push_service = FCMNotification(api_key=settings.GCM_API_KEY)
 
 # create a view for displaying all orders of a particular batch
 
@@ -70,6 +74,14 @@ def order_list(request):
             b.TemporaryShopper = online_shoppers[0].PhoneNo
             b.TemporaryAvailable = True
             b.save()
+
+            # gcm notification
+            registration_id = b.ShopperId.GcmId
+            message_title = "New batch!!!"
+            message_body = "New batch for you buddy!"
+            result = push_service.notify_single_device(registration_id=registration_id, 
+                                                        message_title=message_title, 
+                                                        message_body=message_body)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
