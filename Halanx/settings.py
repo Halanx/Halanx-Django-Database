@@ -148,7 +148,6 @@ USE_L10N = False
 
 DATE_FORMAT = '%d-%m-%Y'
 
-
 USE_TZ = True
 
 STATIC_URL = '/static/'

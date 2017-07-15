@@ -5,6 +5,7 @@ from Carts.serializers import CartItemSerializer1
 
 
 class OrderSerializer(serializers.ModelSerializer):
+
     order_items = CartItemSerializer1(many=True, read_only=True)
 
     class Meta:

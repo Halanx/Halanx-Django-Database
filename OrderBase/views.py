@@ -53,8 +53,8 @@ def order_list(request):
             # store total of active items in order object
             curr.Total = tot
             curr.save()
-
-            order_items = CartItem.objects.filter(OrderId=curr)
+            
+            order_items = CartItem.objects.filter(OrderId = curr)
             online_shoppers = Shopper.objects.filter(IsOnline=True, Verified=True)
 
             b = Batch()
