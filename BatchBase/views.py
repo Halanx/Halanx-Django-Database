@@ -85,9 +85,11 @@ def batch_id(request, pk):
 
                     # gcm notification
                     registration_id = b.ShopperId.GcmId
-                    batch_data = BatchSerializer(b).data
+                    message_title = "New batch!!!"
+                    message_body = "New batch for you buddy!"
                     result = push_service.notify_single_device(registration_id=registration_id,
-                                                               data_message=batch_data)
+                                                               message_title=message_title,
+                                                               message_body=message_body)
 
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
