@@ -9,7 +9,6 @@ class Batch(models.Model):
 
     ShopperId = models.ForeignKey(Shopper, blank=True, null=True)
     Earnings = models.FloatField(blank=True, default=0.0)
-    OrderId = models.ForeignKey(Order, null=True, blank=True)
 
     PermanentShopper = models.BigIntegerField(blank=True, null=True)
     PermanentAvailable = models.BooleanField(blank=True, default=False)
@@ -17,7 +16,11 @@ class Batch(models.Model):
     TemporaryShopper = models.BigIntegerField(blank=True, null=True)
     TemporaryAvailable = models.BooleanField(blank=True, default=False)
 
+    CentroidLatitude = models.FloatField(blank=True, null=True)
+    CentroidLongitude = models.FloatField(blank=True, null=True)
+
     IsDelivered = models.BooleanField(blank=True, default=False)
+    Size = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return str(self.OrderId)
@@ -25,6 +28,3 @@ class Batch(models.Model):
     def save(self, *args, **kwargs):
 
         super(Batch, self).save(*args, **kwargs)
-
-
-

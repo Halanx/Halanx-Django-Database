@@ -8,10 +8,14 @@ from OrderBase.models import Order
 from ShopperBase.models import Shopper
 from OrderBase.serializers import OrderSerializer
 
+from batch_maker import cluster_by_location, find_shopper
+from pyfcm import FCMNotification
+
+push_service = FCMNotification(api_key=settings.GCM_API_KEY)
+
 
 @api_view(['GET', 'POST'])
 def batch_list(request):
-
     if request.method == 'GET':
         batches = Batch.objects.all()
         serializer = BatchSerializer(batches, many=True)
@@ -28,20 +32,63 @@ def batch_list(request):
 # To get product according to its pk
 @api_view(['GET', 'PATCH', 'DELETE'])
 def batch_id(request, pk):
-
     try:
-        part = Batch.objects.get(pk=pk)
+        batch = Batch.objects.get(pk=pk)
     except Batch.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = BatchSerializer(part)
+        serializer = BatchSerializer(batch)
         return Response(serializer.data)
 
     elif request.method == 'PATCH':
-        serializer = BatchSerializer(part, data=request.data, partial=True)
+        serializer = BatchSerializer(batch, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.update(part, request.data)
+            serializer.update(batch, request.data)
+
+            if batch.PermanentAvailable == True:
+                # batch accepted by shopper
+                pass
+            elif batch.PermanentAvailable == False and batch.TemporaryAvailable == False:
+                # batch rejected by shopper. Find new shopper
+
+                items_ordered = CartItem.objects.filter(BatchId=pk)
+
+                for cluster in clusters:
+                    b = batch
+                    # creating tuple of centroid
+                    shoppers = find_shopper((b.CentroidLatitude, b.CentroidLongitude))
+
+                    # these items have already got a batch
+
+                    if shoppers:
+                        b.TemporaryAvailable = True
+                        b.TemporaryShopper = shoppers[0].PhoneNo
+                        b.ShopperId = shoppers[0]
+
+                    elif len(shoppers) == 0:
+
+                        other_shoppers = Shopper.objects.filter(IsOnline=True, Verified=True)
+
+                        # To check if any other shopper available
+                        if len(other_shoppers) == 0:
+                            b.TemporaryAvailable = False
+                            b.save()
+                            return Response({'status': "No shopper found"}, status=200)
+
+                        else:
+                            b.TemporaryShopper = other_shoppers[0].PhoneNo
+                            b.ShopperId = other_shoppers[0]
+                            b.TemporaryAvailable = True
+
+                    b.save()
+
+                    # gcm notification
+                    registration_id = b.ShopperId.GcmId
+                    batch_data = BatchSerializer(b).data
+                    result = push_service.notify_single_device(registration_id=registration_id,
+                                                               data_message=batch_data)
+
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -52,10 +99,6 @@ def batch_id(request, pk):
 
 @api_view(['GET'])
 def batch_id_orders(request, pk):
-
-    # returns json of all orders which have his particular batch number
-    # now to retrieve items, you can go to Order.Items and call itemslist_id for all orders
-
     try:
         part = Order.objects.filter(BatchId=pk)
     except Order.DoesNotExist:
@@ -67,7 +110,7 @@ def batch_id_orders(request, pk):
 
 
 @api_view(['GET'])
-def shopper_batches(request, no):    # to get batches of a shopper
+def shopper_batches(request, no):  # to get batches of a shopper
 
     try:
         who = Shopper.objects.get(PhoneNo=no)

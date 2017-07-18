@@ -1,7 +1,9 @@
+
 from django.db import models
 from Products.models import Product
 from UserBase.models import User
 from OrderBase.models import Order
+from BatchBase.models import Batch
 
 
 class CartItem(models.Model):
@@ -9,6 +11,7 @@ class CartItem(models.Model):
     Cart = models.ForeignKey('Cart', null=True, blank=True, related_name="carts")    # add on_delete cascade
     Item = models.ForeignKey(Product, blank=True, null=True)
     OrderId = models.ForeignKey(Order, related_name='order_items', blank=True, null=True)
+    BatchId = models.ForeignKey(Batch, related_name='batch_items', blank=True, null=True)
 
     # this might not be useful now
 
@@ -56,7 +59,6 @@ class Cart(models.Model):             # object of this class shall be updated as
 
         # attach algo for delivery charges
         super(Cart, self).save(*args, **kwargs)
-
 
 
 
