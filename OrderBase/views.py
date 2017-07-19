@@ -13,13 +13,20 @@ from Carts.serializers import CartItemSerializer
 import requests
 from Halanx import settings
 
-from batch_maker import find_shopper, cluster_by_location
-
-import numpy as np
 from pyfcm import FCMNotification
 push_service = FCMNotification(api_key=settings.GCM_API_KEY)
 
-# create a view for displaying all orders of a particular batch
+from batch_maker import distance, cluster_by_location
+import numpy as np
+
+
+# function to find nearest shoppers to a centroid
+def find_shopper(centroid):
+    shoppers = Shopper.objects.filter(IsOnline=True,Verified=True)
+    sloc = [(s.id,distance(centroid, (s.Latitude, s.Longitude))) for s in shoppers]
+    sloc = sorted(sloc, key = lambda x:x[1])
+    return sloc
+
 
 
 @api_view(['GET', 'POST'])
@@ -60,13 +67,14 @@ def order_list(request):
             # store total of active items in order object
             curr.Total = tot
             curr.save()
-            """
+        
+            # items in current order
             items_ordered = CartItem.objects.filter(OrderId = cid)
 
-            locations = np.array(
-                [(items_ordered.Item.RelatedStore.Latitude, item.Item.RelatedStore.Longitude) for item in items_ordered])
+            # location of stores
+            locations = np.array([(item.Item.RelatedStore.Latitude, item.Item.RelatedStore.Longitude) 
+                for item in items_ordered])
             lookup = np.array([item.id for item in items_ordered])
-            """
 
             clusters = cluster_by_location(locations, lookup)
 
@@ -78,39 +86,27 @@ def order_list(request):
 
                 # these items have already got a batch
                 for item_id in cluster['ids']:
-                    item = CartItem.objects.filter(id=item_id)
-                    item.BatchId = b.id
+                    item = CartItem.objects.get(id=item_id)
+                    item.BatchId = b
                     item.save()
 
                 if shoppers:
                     b.TemporaryAvailable = True
-                    b.TemporaryShopper = shoppers[0].PhoneNo
-                    b.ShopperId = shoppers[0]
+                    shopper = ShopperBase.obejcts.get(id = shoppers[0][0])
+                    b.TemporaryShopper = shopper.PhoneNo
+                    b.ShopperId = shopper
 
                 elif len(shoppers) == 0:
-
-                    other_shoppers = Shopper.objects.filter(IsOnline=True, Verified=True)
-
-                    # To check if any other shopper available
-                    if len(other_shoppers) == 0:
-                        b.TemporaryAvailable = False
-                        b.save()
-                        return Response({'status': "No shopper found"}, status=200)
-
-                    else:
-                        b.TemporaryShopper = other_shoppers[0].PhoneNo
-                        b.ShopperId = other_shoppers[0]
-                        b.TemporaryAvailable = True
+                    b.TemporaryAvailable = False
+                    b.save()
+                    return Response({'status': "No shopper found"}, status=200)
 
                 b.save()
 
                 # gcm notification
                 registration_id = b.ShopperId.GcmId
-                message_title = "New batch!!!"
-                message_body = "New batch for you buddy!"
                 result = push_service.notify_single_device(registration_id=registration_id,
-                                                           message_title = message_title,
-                                                           message_body = message_body)
+                                                           data_message=BatchSerializer(b))
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

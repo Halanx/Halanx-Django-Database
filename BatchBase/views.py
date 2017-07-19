@@ -7,11 +7,21 @@ from .models import Batch
 from OrderBase.models import Order
 from ShopperBase.models import Shopper
 from OrderBase.serializers import OrderSerializer
+from BatchBase.serializers import BatchSerializer
 
-from batch_maker import cluster_by_location, find_shopper
 from pyfcm import FCMNotification
-
 push_service = FCMNotification(api_key=settings.GCM_API_KEY)
+
+from batch_maker import distance
+
+
+# function to find nearest shoppers to a centroid
+def find_shopper(centroid):
+    shoppers = Shopper.objects.filter(IsOnline=True,Verified=True)
+    sloc = [(s.id,distance(centroid, (s.Latitude, s.Longitude))) for s in shoppers]
+    sloc = sorted(sloc, key = lambda x:x[1])
+    return sloc
+
 
 
 @api_view(['GET', 'POST'])
@@ -52,44 +62,27 @@ def batch_id(request, pk):
             elif batch.PermanentAvailable == False and batch.TemporaryAvailable == False:
                 # batch rejected by shopper. Find new shopper
 
-                items_ordered = CartItem.objects.filter(BatchId=pk)
+                shoppers = find_shopper((batch.CentroidLatitude, batch.CentroidLongitude))
+                # removing current shopper who rejected batch
+                shoppers = filter(lambda x:x[0]!=batch.ShopperId.id, shoppers)
 
-                for cluster in clusters:
-                    b = batch
-                    # creating tuple of centroid
-                    shoppers = find_shopper((b.CentroidLatitude, b.CentroidLongitude))
+                if shoppers:
+                    batch.TemporaryAvailable = True
+                    shopper = ShopperBase.obejcts.get(id = shoppers[0][0])
+                    batch.TemporaryShopper = shopper.PhoneNo
+                    batch.ShopperId = shopper
 
-                    # these items have already got a batch
+                elif len(shoppers) == 0:
+                    batch.TemporaryAvailable = False
+                    batch.save()
+                    return Response({'status': "No shopper found"}, status=200)
 
-                    if shoppers:
-                        b.TemporaryAvailable = True
-                        b.TemporaryShopper = shoppers[0].PhoneNo
-                        b.ShopperId = shoppers[0]
+                batch.save()
 
-                    elif len(shoppers) == 0:
-
-                        other_shoppers = Shopper.objects.filter(IsOnline=True, Verified=True)
-
-                        # To check if any other shopper available
-                        if len(other_shoppers) == 0:
-                            b.TemporaryAvailable = False
-                            b.save()
-                            return Response({'status': "No shopper found"}, status=200)
-
-                        else:
-                            b.TemporaryShopper = other_shoppers[0].PhoneNo
-                            b.ShopperId = other_shoppers[0]
-                            b.TemporaryAvailable = True
-
-                    b.save()
-
-                    # gcm notification
-                    registration_id = b.ShopperId.GcmId
-                    message_title = "New batch!!!"
-                    message_body = "New batch for you buddy!"
-                    result = push_service.notify_single_device(registration_id=registration_id,
-                                                               message_title=message_title,
-                                                               message_body=message_body)
+                # gcm notification
+                registration_id = batch.ShopperId.GcmId
+                result = push_service.notify_single_device(registration_id=registration_id,
+                                                           data_message=BatchSerializer(batch))
 
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
