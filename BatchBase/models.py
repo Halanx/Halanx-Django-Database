@@ -23,7 +23,7 @@ class Batch(models.Model):
     Size = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
-        return str(self.OrderId)
+        return str(self.ShopperId)
 
     def save(self, *args, **kwargs):
 

@@ -8,6 +8,7 @@ from OrderBase.models import Order
 from ShopperBase.models import Shopper
 from OrderBase.serializers import OrderSerializer
 from BatchBase.serializers import BatchSerializer
+from Halanx import settings
 
 from pyfcm import FCMNotification
 push_service = FCMNotification(api_key=settings.GCM_API_KEY)
@@ -68,7 +69,7 @@ def batch_id(request, pk):
 
                 if shoppers:
                     batch.TemporaryAvailable = True
-                    shopper = ShopperBase.obejcts.get(id = shoppers[0][0])
+                    shopper = Shopper.objects.get(id = shoppers[0][0])
                     batch.TemporaryShopper = shopper.PhoneNo
                     batch.ShopperId = shopper
 

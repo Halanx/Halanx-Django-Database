@@ -40,8 +40,8 @@ def order_list(request):
 
         data = request.data
 
-        items_ordered = CartItem.objects.filter(RemovedFromCart=False, CartPhoneNo=data['CustomerPhoneNo'])
         # get active items
+        items_ordered = CartItem.objects.filter(RemovedFromCart=False, CartPhoneNo=data['CustomerPhoneNo'])
 
         tot = 0
         for an_item in items_ordered:  # change active items to inactive
@@ -67,9 +67,6 @@ def order_list(request):
             # store total of active items in order object
             curr.Total = tot
             curr.save()
-        
-            # items in current order
-            items_ordered = CartItem.objects.filter(OrderId = cid)
 
             # location of stores
             locations = np.array([(item.Item.RelatedStore.Latitude, item.Item.RelatedStore.Longitude) 
@@ -80,34 +77,36 @@ def order_list(request):
 
             for cluster in clusters:
                 b = Batch()
-                shoppers = find_shopper(cluster['c'])
                 b.CentroidLatitude = cluster['c'][0]
                 b.CentroidLongitude = cluster['c'][1]
 
-                # these items have already got a batch
-                for item_id in cluster['ids']:
-                    item = CartItem.objects.get(id=item_id)
-                    item.BatchId = b
-                    item.save()
+                shoppers = find_shopper(cluster['c'])
 
                 if shoppers:
-                    b.TemporaryAvailable = True
-                    shopper = ShopperBase.obejcts.get(id = shoppers[0][0])
+                    shopper = Shopper.objects.get(id = shoppers[0][0])
                     b.TemporaryShopper = shopper.PhoneNo
+                    b.TemporaryAvailable = True
                     b.ShopperId = shopper
 
                 elif len(shoppers) == 0:
                     b.TemporaryAvailable = False
                     b.save()
                     return Response({'status': "No shopper found"}, status=200)
-
+                
                 b.save()
+                
+                # add items to batch
+                for item_id in cluster['ids']:
+                    item = CartItem.objects.get(id=item_id)
+                    item.BatchId = b
+                    item.save()
+
 
                 # gcm notification
                 registration_id = b.ShopperId.GcmId
                 result = push_service.notify_single_device(registration_id=registration_id,
-                                                           data_message=BatchSerializer(b))
-
+                                                           data_message=BatchSerializer(b).data)
+                
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

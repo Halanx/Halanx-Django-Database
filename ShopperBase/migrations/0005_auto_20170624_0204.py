@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ShopperBase', '0004_documents_squashed_0005_auto_20170615_0222'),
+        ('ShopperBase', '0003_auto_20170613_1746'),
     ]
 
     operations = [
