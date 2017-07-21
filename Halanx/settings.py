@@ -55,12 +55,16 @@ INSTALLED_APPS = (
     'allauth.account',
     #  'rest_auth.registration',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook'
+    'allauth.socialaccount.providers.facebook',
+    'corsheaders',
 )
 
 SITE_ID = 1
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
