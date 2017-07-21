@@ -5,7 +5,14 @@ from StoreBase.serializers import StoreSerializer, StoreSerializer1
 
 class ProductSerializer(serializers.ModelSerializer):
 
-    RelatedStore = StoreSerializer1()
+    RelatedStore = StoreSerializer1(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class ProductPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
@@ -13,9 +20,17 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductPhotoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ProductPhoto
         fields = '__all__'
+
+
+
+
+
+
+
 
 
 
