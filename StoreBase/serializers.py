@@ -17,8 +17,11 @@ class LogoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class StoreSerializer1(serializers.ModelSerializer):
 
-
+    class Meta:
+        model = Store
+        fields = ['id', 'StoreName', 'Latitude', 'Longitude', 'StoreLogo']
 
 
 

@@ -12,8 +12,7 @@ class CartItem(models.Model):
     Item = models.ForeignKey(Product, blank=True, null=True)
     OrderId = models.ForeignKey(Order, related_name='order_items', blank=True, null=True)
     BatchId = models.ForeignKey(Batch, related_name='batch_items', blank=True, null=True)
-
-    # this might not be useful now
+    CartUser = models.ForeignKey(User, blank=True, null=True)
 
     CartPhoneNo = models.BigIntegerField(blank=True, null=True)   # phone of User
 
@@ -27,11 +26,12 @@ class CartItem(models.Model):
 
     def save(self, *args, **kwargs):
         self.SubTotal = self.Item.Price * self.Quantity
+        user = User.objects.get(PhoneNo=self.CartPhoneNo)
         g = Cart.objects.get(UserPhone=self.CartPhoneNo)
         self.Cart = g
+        self.CartUser = user
         self.Cart.Total = self.Cart.Total + (self.Item.Price*self.Quantity)
         self.Cart.save()
-        # self.CartNo = self.Cart.pk
         super(CartItem, self).save(*args, **kwargs)
 
     def __str__(self):

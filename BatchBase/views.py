@@ -24,7 +24,6 @@ def find_shopper(centroid):
     return sloc
 
 
-
 @api_view(['GET', 'POST'])
 def batch_list(request):
     if request.method == 'GET':
