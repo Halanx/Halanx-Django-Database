@@ -11,7 +11,6 @@ import json
 import base64
 import boto3
 
-
 @api_view(['GET', 'POST'])
 def product_list(request):
 
@@ -70,10 +69,12 @@ def upload_photo(request, pk):
 
             filename = '%s.jpeg' % data['ProductId']
             client = boto3.client('s3')
-            img1 = base64.b64decode(data['ProductString'])
+            #img1 = base64.b64decode(data['ProductString'])
+
             client.put_object(Bucket='halanx-products',
                               ACL='public-read',
-                              Key=filename, ContentType='jpeg',
+                              Key=filename, ContentEncoding='base64',
+                              ContentType='image/jpeg',
                               Body=img1)
 
             part.ProductImage = 'https://s3-us-west-2.amazonaws.com/halanx-products/' + filename
