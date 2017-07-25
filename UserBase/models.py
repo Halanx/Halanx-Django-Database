@@ -6,6 +6,8 @@ class User(models.Model):
     # UserName = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
     PhoneNo = models.BigIntegerField(unique=True, null=True)
 
+    GcmId = models.CharField(max_length=500, blank=True, null=True)
+
     AccessToken = models.CharField(max_length=300, blank=True, null=True)
     EmailId = models.EmailField(blank=True)
     FirstName = models.CharField(max_length=200, blank=True)

@@ -51,6 +51,17 @@ def user_id(request, no):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['GET'])
+def user_access(request, token):
+
+    try:
+        part = User.objects.get(AccessToken=token)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = UserSerializer(part)
+        return Response(serializer.data)
 
 
 """
