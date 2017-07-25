@@ -69,7 +69,7 @@ def upload_photo(request, pk):
 
             filename = '%s.jpeg' % data['ProductId']
             client = boto3.client('s3')
-            #img1 = base64.b64decode(data['ProductString'])
+            img1 = data['ProductString']
 
             client.put_object(Bucket='halanx-products',
                               ACL='public-read',
