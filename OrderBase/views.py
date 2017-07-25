@@ -10,6 +10,7 @@ from ShopperBase.models import Shopper
 from BatchBase.models import Batch
 from BatchBase.serializers import BatchSerializer
 from Carts.serializers import CartItemSerializer
+from ShopperBase.serializers import ShopperSerializer
 import requests
 from Halanx import settings
 
@@ -94,12 +95,19 @@ def order_list(request):
                     return Response({'status': "No shopper found"}, status=200)
                 
                 b.save()
+
                 
                 # add items to batch
                 for item_id in cluster['ids']:
                     item = CartItem.objects.get(id=item_id)
                     item.BatchId = b
                     item.save()
+
+                    # send notification of every item's shopper to its user.
+                    user_gcm_id = item.CartUser.GcmId
+                    result = push_service.notify_single_device(registration_id=user_gcm_id,
+                                data_message = ShopperSerializer(shopper).data)
+
 
 
                 # gcm notification
