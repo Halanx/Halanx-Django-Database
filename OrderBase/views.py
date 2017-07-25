@@ -10,23 +10,23 @@ from ShopperBase.models import Shopper
 from BatchBase.models import Batch
 from BatchBase.serializers import BatchSerializer
 from Carts.serializers import CartItemSerializer
-import requests
+from ShopperBase.serializers import ShopperSerializer
 from Halanx import settings
 
 from pyfcm import FCMNotification
-push_service = FCMNotification(api_key=settings.GCM_API_KEY)
-
 from batch_maker import distance, cluster_by_location
 import numpy as np
+import requests
+
+push_service = FCMNotification(api_key=settings.GCM_API_KEY)
 
 
 # function to find nearest shoppers to a centroid
 def find_shopper(centroid):
-    shoppers = Shopper.objects.filter(IsOnline=True,Verified=True)
-    sloc = [(s.id,distance(centroid, (s.Latitude, s.Longitude))) for s in shoppers]
-    sloc = sorted(sloc, key = lambda x:x[1])
+    shoppers = Shopper.objects.filter(IsOnline=True, Verified=True)
+    sloc = [(s.id, distance(centroid, (s.Latitude, s.Longitude))) for s in shoppers]
+    sloc = sorted(sloc, key=lambda x: x[1])
     return sloc
-
 
 
 @api_view(['GET', 'POST'])
@@ -69,8 +69,8 @@ def order_list(request):
             curr.save()
 
             # location of stores
-            locations = np.array([(item.Item.RelatedStore.Latitude, item.Item.RelatedStore.Longitude) 
-                for item in items_ordered])
+            locations = np.array([(item.Item.RelatedStore.Latitude, item.Item.RelatedStore.Longitude)
+                                  for item in items_ordered])
             lookup = np.array([item.id for item in items_ordered])
 
             clusters = cluster_by_location(locations, lookup)
@@ -83,7 +83,7 @@ def order_list(request):
                 shoppers = find_shopper(cluster['c'])
 
                 if shoppers:
-                    shopper = Shopper.objects.get(id = shoppers[0][0])
+                    shopper = Shopper.objects.get(id=shoppers[0][0])
                     b.TemporaryShopper = shopper.PhoneNo
                     b.TemporaryAvailable = True
                     b.ShopperId = shopper
@@ -92,21 +92,25 @@ def order_list(request):
                     b.TemporaryAvailable = False
                     b.save()
                     return Response({'status': "No shopper found"}, status=200)
-                
+
                 b.save()
-                
+
                 # add items to batch
                 for item_id in cluster['ids']:
                     item = CartItem.objects.get(id=item_id)
                     item.BatchId = b
                     item.save()
 
+                    # send notification of every item's shopper to its user.
+                    user_gcm_id = item.CartUser.GcmId
+                    result = push_service.notify_single_device(registration_id=user_gcm_id,
+                                                               data_message=ShopperSerializer(shopper).data)
 
                 # gcm notification
                 registration_id = b.ShopperId.GcmId
                 result = push_service.notify_single_device(registration_id=registration_id,
                                                            data_message=BatchSerializer(b).data)
-                
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -154,8 +158,6 @@ def user_orders(request, pk):
         g = Order.objects.filter(CustomerPhoneNo=pk)
         serializer = OrderSerializer(g, many=True)
         return Response(serializer.data)
-
-
 
 
 
