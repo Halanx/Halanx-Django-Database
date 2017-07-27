@@ -73,8 +73,7 @@ def upload_photo(request, pk):
 
             client.put_object(Bucket='halanx-products',
                               ACL='public-read',
-                              Key=filename, ContentEncoding='base64',
-                              ContentType='image/jpeg',
+                              Key=filename, ContentType='image/jpeg',
                               Body=img1)
 
             part.ProductImage = 'https://s3-us-west-2.amazonaws.com/halanx-products/' + filename
