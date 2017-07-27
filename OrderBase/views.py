@@ -102,13 +102,7 @@ def order_list(request):
                     item.BatchId = b
                     item.save()
 
-                    # send notification of every item's shopper to its user.
-                    user_gcm_id = item.CartUser.GcmId
-                    result = push_service.notify_single_device(registration_id=user_gcm_id,
-                                data_message = ShopperSerializer(shopper).data)
-
-
-                # gcm notification
+                # gcm notification to temporary shoppers
                 registration_id = b.ShopperId.GcmId
                 result = push_service.notify_single_device(registration_id=registration_id,
                                                            data_message=BatchSerializer(b).data)

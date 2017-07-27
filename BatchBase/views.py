@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from .models import Batch
 from OrderBase.models import Order
 from ShopperBase.models import Shopper
+from Carts.models import CartItem
 from OrderBase.serializers import OrderSerializer
 from BatchBase.serializers import BatchSerializer
 from Halanx import settings
@@ -58,7 +59,21 @@ def batch_id(request, pk):
 
             if batch.PermanentAvailable == True:
                 # batch accepted by shopper
-                pass
+                items = CartItem.objects.get(BatchId = batch)
+                shopper = batch.ShopperId
+
+                # set of all users to notify
+                users = []
+                for item in items:
+                    users.append(item.CartUser)
+                users = set(users)
+
+                # notify all users
+                for user in users:
+                    user_gcm_id = user.GcmId
+                    result = push_service.notify_single_device(registration_id=user_gcm_id,
+                                data_message = ShopperSerializer(shopper).data)
+                
             elif batch.PermanentAvailable == False and batch.TemporaryAvailable == False:
                 # batch rejected by shopper. Find new shopper
 
