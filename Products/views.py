@@ -63,18 +63,19 @@ def upload_photo(request, pk):
 
     if request.method == 'POST':
 
-        data = request.data
+        file = request.FILES.get('image')
 
-        if data['ProductString'] is not None:
+        if file is not None:
+            
+            filename = file.filename
+            img = file.stream.read()
+            content_type = file.content_type
 
-            filename = '%s.jpeg' % data['ProductId']
             client = boto3.client('s3')
-            img1 = data['ProductString']
-
             client.put_object(Bucket='halanx-products',
                               ACL='public-read',
-                              Key=filename, ContentType='image/jpeg',
-                              Body=img1)
+                              Key=filename, ContentType=content_type,
+                              Body=img)
 
             part.ProductImage = 'https://s3-us-west-2.amazonaws.com/halanx-products/' + filename
             part.save()
@@ -92,21 +93,3 @@ def upload_photo(request, pk):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
