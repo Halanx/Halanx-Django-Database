@@ -9,7 +9,7 @@ django-cors-headers==2.1.0
 django-filter==1.0.1
 django-registration==2.2
 django-rest-auth==0.9.1
-djangorestframework==3.5.3
+djangorestframework==3.9.1
 docutils==0.13.1
 gunicorn==19.6.0
 idna==2.5
