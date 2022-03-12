@@ -34,7 +34,7 @@ oauthlib==2.0.2
 olefile==0.44
 packaging==16.8
 pandas==0.20.3
-Pillow==4.0.0
+Pillow==9.0.1
 pip-review==0.5.3
 pyasn1==0.2.3
 pycparser==2.17
